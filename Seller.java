@@ -1,5 +1,6 @@
 
 // Main class, to be run at the start of mining.
+import java.io.IOException;
 import java.util.*;
 
 public class Seller {
@@ -8,6 +9,7 @@ public class Seller {
 
 	public static void main(String[] args) {
 		// Record start time
+		// TODO: Check timezone
 		Date startTime = new Date();
 		
 		// Wait for end, get range and size
@@ -42,7 +44,17 @@ public class Seller {
 		System.out.println("Data entered is " + range + " and " + shipSize + " and " + startTime);
 		
 		
-		// Read logs
+		// Create up to date cargo.
+		ShipHold cargo;
+		try {
+			cargo = new ShipHold("C:\\Users\\gint271\\Saved Games\\Frontier Developments\\Elite Dangerous\\Journal.170925125640.01.txt", 
+					startTime);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Failed to read log. " + e);
+			sc.close();
+			return;
+		}
 		
 		// Calculate best stations
 		
