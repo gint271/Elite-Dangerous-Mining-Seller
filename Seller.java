@@ -47,7 +47,7 @@ public class Seller {
 		// Create up to date cargo.
 		ShipHold cargo;
 		try {
-			cargo = new ShipHold("C:\\Users\\gint271\\Saved Games\\Frontier Developments\\Elite Dangerous\\Journal.170925125640.01.txt", 
+			cargo = new ShipHold("./TestFiles/Journal.170925125640.01", 
 					startTime);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
