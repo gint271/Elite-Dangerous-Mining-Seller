@@ -19,10 +19,14 @@ public class ShipHold {
 		while ((currentLine = logReader.readLine()) != null) {
 			// TODO: Assumes English,  some log entries have unlocalised types, some don't.
 			 // Find the event type.
-			System.out.println(readValue("event", currentLine));
 			String eventType = readValue("event", currentLine);
 			if (eventType.equals("MiningRefined")) {
-				editCargo(readValue("Type_Localised", currentLine), 1);
+				// Ore names on this entry are captialized, for some reason.
+				editCargo(readValue("Type_Localised", currentLine).toLowerCase(), 1);
+			} else if (eventType.equals("EjectCargo") || eventType.equals("MarketSell")) {
+				editCargo(readValue("Type", currentLine), -readInt("Count", currentLine));
+			} else if (eventType.equals("Died")) {
+				cargo = new HashMap<String, Integer>();
 			}
 		}
 		
@@ -48,6 +52,18 @@ public class ShipHold {
 		}
 		
 		return readText;
+	}
+	
+	private int readInt(String key, String line) {
+		int startIndex = line.indexOf("\"" + key + "\"") + key.length() + 3;
+		
+		String readText = "";
+		
+		for (; line.charAt(startIndex) != ','; startIndex++) {
+			readText = readText + line.charAt(startIndex);
+		}
+		
+		return Integer.parseInt(readText);
 	}
 	
 	// Changes the amount of itemName in the hold by count.

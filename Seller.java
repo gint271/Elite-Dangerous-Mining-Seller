@@ -61,6 +61,6 @@ public class Seller {
 		// Output to user
 
 		sc.close();
-	}
+	} 
 
 }
