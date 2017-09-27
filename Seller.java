@@ -1,9 +1,7 @@
 
 // Main class, to be run at the start of mining.
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
+import java.io.*;
 
 public class Seller {
 	
@@ -14,7 +12,7 @@ public class Seller {
 	private final static int X_INDEX = 3;
 	private final static int Y_INDEX = 4;
 	private final static int Z_INDEX = 5;
-	private final static int POPULATION_INDEX = 6;
+	private final static int POPULATION_INDEX = 7;
 
 	public static void main(String[] args) {
 		// Record start time
@@ -74,24 +72,61 @@ public class Seller {
 			return;
 		}
 		BufferedReader systemReader = new BufferedReader(fr);
-		Map<Integer, Point3D> systemMap = new HashMap<Integer, Point3D>();
+		
+		Map<Integer, StarSystem> systemMap = new HashMap<Integer, StarSystem>();
 		String currentLine;
-		int originID;
+		StarSystem startingSystem = null;
 		// TODO: Make a system object.
 		try {
+			systemReader.readLine(); // Skip header.
+			
+			// Find and save the current System.
 			while ((currentLine = systemReader.readLine()) != null) {
 				String systemElements[] = currentLine.split(",");
 				if (systemElements[NAME_INDEX].equals("\"GCRV 1568\"")) {
 					System.out.println(currentLine);
-					originID = Integer.parseInt(systemElements[ID_INDEX]);
+					startingSystem = new StarSystem(Double.parseDouble(systemElements[X_INDEX]), 
+							Double.parseDouble(systemElements[Y_INDEX]), Double.parseDouble(systemElements[Z_INDEX]));
 					
-				} else if ()
+				}
+				
+				// Import all systems with populations that could be sold to.
+				String populationString = systemElements[POPULATION_INDEX];
+				if (!populationString.equals("") && Integer.parseInt(populationString) == 1) {
+					StarSystem populatedSystem = new StarSystem(Double.parseDouble(systemElements[X_INDEX]), 
+							Double.parseDouble(systemElements[Y_INDEX]), Double.parseDouble(systemElements[Z_INDEX]));
+					systemMap.put(Integer.parseInt(systemElements[ID_INDEX]), populatedSystem);
+				}
 			}
 		} catch (IOException e) {
 			System.out.println("Failed to read system file. " + e);
 			sc.close();
 			return;
 		}
+		
+		// Filter out all systems out of range.
+		if (startingSystem == null) {
+			System.out.println("Error: Couldn't find starter system name.");
+			sc.close();
+			return;
+		}
+		
+		// TODO: Do I really want a map, or just a list.  Seem to always iterate over everything, not
+		// look at specific entries.
+		// TODO: Make parallel.
+		//final StarSystem fixedStartingSystem = startingSystem;
+		//systemMap.values().parallelStream().filter(p -> (fixedStartingSystem.distanceTo(p) <= range)).to;
+		
+		Iterator<Map.Entry<Integer, StarSystem>> systemIter = systemMap.entrySet().iterator();
+		while (systemIter.hasNext()) {
+			Map.Entry<Integer, StarSystem> possibleSystem = systemIter.next();
+			if (startingSystem.distanceTo(possibleSystem.getValue()) > range) {
+				systemIter.remove();
+			}
+		}
+		
+		// Compile list of all stations in those systems.
+		
 		
 		System.out.println("Done");
 		
