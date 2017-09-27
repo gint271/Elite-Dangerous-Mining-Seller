@@ -38,7 +38,8 @@ public class ShipHold {
 	// Returns the text between the first encountered pair of double quotation marks.
 	// Used for reading names of minerals/event types.
 	// Warning: Pretty stupid about where in the structure the keyword is found, could be in a chat message or something.
-	private String readValue(String key, String line) {
+	// TODO: Make actual json/csv readers.
+	public static String readValue(String key, String line) {
 		int startIndex = line.indexOf("\"" + key + "\"") + key.length() + 3;
 		
 		String readText = "";
@@ -54,7 +55,7 @@ public class ShipHold {
 		return readText;
 	}
 	
-	private int readInt(String key, String line) {
+	public static int readInt(String key, String line) {
 		int startIndex = line.indexOf("\"" + key + "\"") + key.length() + 3;
 		
 		String readText = "";

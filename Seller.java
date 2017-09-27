@@ -104,6 +104,8 @@ public class Seller {
 			return;
 		}
 		
+		
+		
 		// Filter out all systems out of range.
 		if (startingSystem == null) {
 			System.out.println("Error: Couldn't find starter system name.");
@@ -125,8 +127,34 @@ public class Seller {
 			}
 		}
 		
-		// Compile list of all stations in those systems.
 		
+		// Compile list of all stations in those systems.
+		FileReader stationFileReader;
+		try {
+			stationFileReader = new FileReader("./TestFiles/stations.jsonl");
+		} catch (IOException e) {
+			System.out.println("Failed to open station file. " + e);
+			sc.close();
+			return;
+		}
+		BufferedReader stationReader = new BufferedReader(stationFileReader);
+		
+		String stationLine;
+		Set<Integer> stationSet = new HashSet<Integer>();
+		try {
+			while ((stationLine = stationReader.readLine()) != null) {
+				int stationID = ShipHold.readInt("id", stationLine);
+				int systemID = ShipHold.readInt("system_id", stationLine);
+				
+				if (systemMap.containsKey(systemID)) {
+					stationSet.add(stationID);
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Error: Failed to read station file. " + e);
+			sc.close();
+			return;
+		}
 		
 		System.out.println("Done");
 		
